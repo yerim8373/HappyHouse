@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ssafy.happyhouse.mapper.StoreMapper">
+
+	<select id="getStoreByName" parameterType="string" resultType="StoreDto">
+		select id, name, dongcode, type, lat, lng 
+		from store 
+		where name 
+		like CONCAT('%', #{name} ,'%');
+	</select>
+	<select id="getStoreByType" parameterType="string" resultType="StoreDto">
+		select id, name, dongcode, type, lat, lng 
+		from store 
+		where type 
+		like CONCAT('%', #{name} ,'%');
+	</select>
+</mapper>

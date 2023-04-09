@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ssafy.happyhouse.mapper.HouseAvgMapper">
+
+	<select id="getSido" resultType="sidoGugunCodeDto">
+		select left(sidoCode,2) sidoCode, sidoName
+		from sidocode
+		order by sidoCode
+	</select>
+	
+	<select id="getGugunInSido" parameterType="string" resultType="sidoGugunCodeDto">
+		select left(gugunCode,5) gugunCode, gugunName
+		from guguncode
+		where left(gugunCode,2) = #{sido}
+		order by gugunCode
+	</select>
+	
+	<select id="getAptDealInfo" parameterType="string" resultType="dealAvg">
+		select round(avg(b.dealAmount), 1) dealAvg, a.dongName
+		from houseinfo a join housedeal b
+		on (a.aptCode = b.aptCode)
+		where a.dongCode in 
+		(select distinct dongCode
+		from houseinfo
+		where left(dongCode, 5) = #{gugun}
+		order by dongName)
+		group by a.dongName;
+	</select>
+</mapper>

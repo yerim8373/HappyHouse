@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ssafy.happyhouse.mapper.HouseMapMapper">
+
+	<select id="getSido" resultType="sidoGugunCodeDto">
+		select left(sidoCode,2) sidoCode, sidoName
+		from sidocode
+		order by sidoCode
+	</select>
+	
+	<select id="getGugunInSido" parameterType="string" resultType="sidoGugunCodeDto">
+		select left(gugunCode,5) gugunCode, gugunName
+		from guguncode
+		where left(gugunCode,2) = #{sido}
+		order by gugunCode
+	</select>
+	
+	<select id="getDongInGugun" parameterType="string" resultType="dongCode">
+		select distinct dong, dongCode
+		from houseinfo
+		where sigunguCode = left(#{gugun}, 5)
+		order by dong
+	</select>
+	
+	<!-- <select id="getAptInDong" parameterType="string" resultType="houseInfo">
+		select a.aptName, a.dongCode, a.lat, a.lng, b.no, b.dealAmount, b.dealYear, b.dealMonth, b.dealDay, b.area, b.floor, a.aptCode
+				from houseinfo a join housedeal b
+				on (a.aptCode = b.aptCode)
+				where a.dongCode = #{dong}
+	</select> -->
+	
+	<select id="getAptInDong" parameterType="map" resultType="houseInfo">
+		select a.apartmentName, a.dongCode, a.lat, a.lng, a.buildYear, b.no, b.dealAmount, b.dealYear, b.dealMonth, b.dealDay, b.area, b.floor, a.aptCode
+		from houseinfo a join housedeal b
+		on (a.aptCode = b.aptCode)
+		where a.dongCode = #{dong}
+		AND b.dealDate
+		between #{startDate} AND #{endDate}
+	</select>
+	
+	<select id="getAptInAptcode" parameterType="string" resultType="houseInfo">
+		select a.apartmentName, a.dongCode, a.lat, a.lng, b.no, b.dealAmount, b.dealYear, b.dealMonth, b.dealDay, b.area, b.floor, a.aptCode
+				from houseinfo a join housedeal b
+				on (a.aptCode = b.aptCode)
+				where a.aptCode = #{aptCode}
+	</select>
+	
+	<select id="getAptInAptName" parameterType="string" resultType="houseInfo">
+		select a.apartmentName, a.dongCode, a.lat, a.lng, b.no, b.dealAmount, b.dealYear, b.dealMonth, b.dealDay, b.area, b.floor, a.aptCode
+				from houseinfo a join housedeal b
+				on (a.aptCode = b.aptCode)
+				where a.aptName like CONCAT('%', #{name} ,'%');
+	</select>
+	
+</mapper>
